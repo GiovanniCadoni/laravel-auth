@@ -69,7 +69,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -79,9 +80,16 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StorePostRequest $request, $id)
     {
-        //
+        $form_data = $request->validated();
+        $post_to_update = Post::findOrFail($id);
+        $post_to_update->titolo = $form_data['titolo'];
+        $post_to_update->contenuto = $form_data['contenuto'];
+        $post_to_update->slug = Str::slug($form_data['titolo']);
+        $post_to_update->save();
+
+        return redirect()->route('admin.posts.show', ['post' => $post_to_update->id]);
     }
 
     /**
@@ -92,6 +100,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect()->route('admin.posts.index');  
     }
 }

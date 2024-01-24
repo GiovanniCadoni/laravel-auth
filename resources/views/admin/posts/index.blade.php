@@ -22,7 +22,15 @@
                         <td>{{ $post->titolo }}</td>
                         <td>{{ $post->created_at }}</td>
                         <td>
-                            <a class="btn btn-warning" href="{{ route('admin.posts.show', ['post' => $post->id]) }}">Info</a>
+                            <a class="btn btn-secondary" href="{{ route('admin.posts.show', ['post' => $post->id]) }}">Info</a>
+                            <a class="btn btn-warning" href="{{ route('admin.posts.edit', ['post' => $post->id]) }}">Modifica</a>
+                            <form class="d-inline-block" action="{{ route('admin.posts.destroy', ['post' => $post->id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger">
+                                    Cancella
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
