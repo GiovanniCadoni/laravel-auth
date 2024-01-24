@@ -5,6 +5,7 @@
         <h2 class="fw-bold">
             Lista dei Post
         </h2>
+        <a href="{{ route('admin.posts.create') }}">Aggiungi un nuovo post +</a>
         <table class="table table-striped p-5">
             <thead>
               <tr>
@@ -21,7 +22,7 @@
                         <td>{{ $post->titolo }}</td>
                         <td>{{ $post->created_at }}</td>
                         <td>
-
+                            <a class="btn btn-warning" href="{{ route('admin.posts.show', ['post' => $post->id]) }}">Info</a>
                         </td>
                     </tr>
                 @endforeach
