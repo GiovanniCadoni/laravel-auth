@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePostRequest;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -43,7 +45,11 @@ class PostController extends Controller
         $post = new Post();
         $post->titolo = $form_data['titolo'];
         $post->contenuto = $form_data['contenuto'];
-        $post->slug = Str::slug($form_data['titolo']); 
+        $post->slug = Str::slug($form_data['titolo']);
+        if($request->hasFile('cover_image')) {
+            $path = Storage::put('post_images', $request->cover_image);
+            $post->cover_image = $path;
+        }
         $post->save();
 
         return redirect()->route('admin.posts.show', ['post' => $post->id]);
@@ -87,6 +93,14 @@ class PostController extends Controller
         $post_to_update->titolo = $form_data['titolo'];
         $post_to_update->contenuto = $form_data['contenuto'];
         $post_to_update->slug = Str::slug($form_data['titolo']);
+        if($request->hasFile('cover_image')) {
+            if($post_to_update->cover_image) {
+                Storage::delete($post_to_update->cover_image);
+            }
+            $path = Storage::put('post_images', $request->cover_image);
+            $post_to_update['cover_image'] = $path;
+
+        }
         $post_to_update->save();
 
         return redirect()->route('admin.posts.show', ['post' => $post_to_update->id]);
@@ -102,6 +116,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->delete();
-        return redirect()->route('admin.posts.index');  
+        Storage::delete($post->cover_image);
+        return redirect()->route('admin.posts.index')->with('message', 'Il post di nome "' . $post->titolo .  '" è stato cancellato con successo');;  
     }
 }

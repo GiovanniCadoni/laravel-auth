@@ -18,7 +18,7 @@
                         </ul>
                     </div>
                 @endif
-                <form action="{{ route('admin.posts.update', ['post' =>$post->id]) }}" method="POST">
+                <form action="{{ route('admin.posts.update', ['post' =>$post->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
@@ -32,7 +32,21 @@
                             {{ old('contenuto', $post->contenuto) }}
                         </textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Modifica</button>
+                    <div class="mb-3">
+                        <label for="cover_image" class="form-label">Immagine</label>
+                        <input type="file" class="form-control" id="cover_image" name="cover_image">
+                    </div>
+                    @if ($post->cover_image)
+                        <div class="image-preview mb-3">
+                            <p>Vecchia immagine:</p>
+                            <img class="rounded-2" src="{{ asset('storage/' . $post->cover_image) }}" alt="">
+                        </div>
+                    @endif
+                    <div class="mb-3">
+                        <p>Preview della nuova immagine inserita:</p>
+                        <img id="preview-img" src="" alt="">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salva</button>
                 </form>
             </div>
         </div>

@@ -27,6 +27,7 @@ class StorePostRequest extends FormRequest
             'titolo' => 'required|min:5|max:25',
             'contenuto' => 'nullable|max:250',
             'slug' => 'nullable',
+            'cover_image' => ['nullable', 'image', 'max:512'],
         ];
     }
 
@@ -36,6 +37,8 @@ class StorePostRequest extends FormRequest
             'titolo.min' => 'Il titolo inserito è troppo piccolo',
             'titolo.max' => 'Il titolo inserito è troppo grande',
             'contenuto.max' => 'Il contenuto inserito è troppo grande',
+            'cover_image.image' => 'Il contenuto inserito non è supportato',
+            'cover_image.max' => 'Il contenuto inserito è troppo grande',
         ];
     }
 }
